@@ -1366,12 +1366,12 @@ public class NumberPicker extends LinearLayout {
 		if ((mVirtualButtonPressedDrawable != null)
 				&& (mScrollState == OnScrollListener.SCROLL_STATE_IDLE)) {
 			if (mDecrementVirtualButtonPressed) {
-				//mVirtualButtonPressedDrawable.setState(PRESSED_STATE_SET);// FIXME
+				mVirtualButtonPressedDrawable.setState(ViewUtils.getPressedStateSet());
 				mVirtualButtonPressedDrawable.setBounds(0, 0, getRight(), mTopSelectionDividerTop);
 				mVirtualButtonPressedDrawable.draw(canvas);
 			}
 			if (mIncrementVirtualButtonPressed) {
-				//mVirtualButtonPressedDrawable.setState(PRESSED_STATE_SET);// FIXME
+				mVirtualButtonPressedDrawable.setState(ViewUtils.getPressedStateSet());
 				mVirtualButtonPressedDrawable.setBounds(0, mBottomSelectionDividerBottom, getRight(),
 						getBottom());
 				mVirtualButtonPressedDrawable.draw(canvas);
@@ -1453,46 +1453,10 @@ public class NumberPicker extends LinearLayout {
 			int minSize, int measuredSize, int measureSpec) {
 		if (minSize != SIZE_UNSPECIFIED) {
 			final int desiredWidth = Math.max(minSize, measuredSize);
-			return resolveSizeAndStateCompat(desiredWidth, measureSpec, 0);
+			return ViewUtils.resolveSizeAndState(desiredWidth, measureSpec, 0);
 		} else {
 			return measuredSize;
 		}
-	}
-
-	/**
-	 * FIXME TAKEN FORM VIEW
-	 * Utility to reconcile a desired size and state, with constraints imposed
-	 * by a MeasureSpec.  Will take the desired size, unless a different size
-	 * is imposed by the constraints.  The returned value is a compound integer,
-	 * with the resolved size in the {@link #MEASURED_SIZE_MASK} bits and
-	 * optionally the bit {@link #MEASURED_STATE_TOO_SMALL} set if the resulting
-	 * size is smaller than the size the view wants to be.
-	 *
-	 * @param size How big the view wants to be
-	 * @param measureSpec Constraints imposed by the parent
-	 * @return Size information bit mask as defined by
-	 * {@link #MEASURED_SIZE_MASK} and {@link #MEASURED_STATE_TOO_SMALL}.
-	 */
-	public static int resolveSizeAndStateCompat(int size, int measureSpec, int childMeasuredState) {
-		int result = size;
-		int specMode = MeasureSpec.getMode(measureSpec);
-		int specSize =  MeasureSpec.getSize(measureSpec);
-		switch (specMode) {
-		case MeasureSpec.UNSPECIFIED:
-			result = size;
-			break;
-		case MeasureSpec.AT_MOST:
-			if (specSize < size) {
-				result = specSize | MEASURED_STATE_TOO_SMALL;
-			} else {
-				result = size;
-			}
-			break;
-		case MeasureSpec.EXACTLY:
-			result = specSize;
-			break;
-		}
-		return result | (childMeasuredState&MEASURED_STATE_MASK);
 	}
 
 	/**
